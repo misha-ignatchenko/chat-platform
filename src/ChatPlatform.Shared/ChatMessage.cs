@@ -1,6 +1,3 @@
 ﻿namespace ChatPlatform.Shared;
 
-public class Class1
-{
-
-}
+public record ChatMessage(Guid Id, Guid SenderId, Guid RoomId, string Text, DateTimeOffset SentAt);
