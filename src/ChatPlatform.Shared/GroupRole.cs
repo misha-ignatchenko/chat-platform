@@ -4,7 +4,10 @@ using System.Text;
 
 namespace ChatPlatform.Shared
 {
-    internal class GroupRole
+    public enum GroupRole
     {
+        Member,
+        Admin,
+        Owner
     }
 }
