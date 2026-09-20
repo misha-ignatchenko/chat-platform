@@ -1,12 +1,13 @@
-var builder = WebApplication.CreateBuilder(args);
+using ChatPlatform.Server.Data;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+builder.Services.AddDbContext<ChatPlatformDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
