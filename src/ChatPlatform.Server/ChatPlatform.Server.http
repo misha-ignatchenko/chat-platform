@@ -1,6 +1,19 @@
-@ChatPlatform.Server_HostAddress = http://localhost:5007
+@ChatPlatform.Server_HostAddress = https://localhost:7004
 
-GET {{ChatPlatform.Server_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "login": "testuser",
+  "password": "TestPassword123"
+}
 
 ###
+
+POST {{ChatPlatform.Server_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "login": "testuser1",
+  "password": "TestPassword123"
+}
