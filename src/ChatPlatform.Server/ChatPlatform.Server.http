@@ -1,5 +1,6 @@
 @ChatPlatform.Server_HostAddress = https://localhost:7004
 
+###
 POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
 Content-Type: application/json
 
@@ -9,11 +10,37 @@ Content-Type: application/json
 }
 
 ###
-
+# @name login
 POST {{ChatPlatform.Server_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-  "login": "testuser1",
+  "login": "testuser",
   "password": "TestPassword123"
+}
+
+###
+POST {{ChatPlatform.Server_HostAddress}}/api/groups
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "name": "My first group"
+}
+
+###
+POST {{ChatPlatform.Server_HostAddress}}/api/groups
+Content-Type: application/json
+
+{
+  "name": "My first group"
+}
+
+###
+POST {{ChatPlatform.Server_HostAddress}}/api/groups
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "name": ""
 }
