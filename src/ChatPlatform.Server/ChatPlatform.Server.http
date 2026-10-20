@@ -1,46 +1,75 @@
 @ChatPlatform.Server_HostAddress = https://localhost:7004
 
-###
+### 
 POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
 Content-Type: application/json
 
-{
-  "login": "testuser",
-  "password": "TestPassword123"
-}
+{ "login": "testuser", "password": "TestPassword123" }
 
-###
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{ "login": "testuser2", "password": "TestPassword123" }
+
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{ "login": "testuser3", "password": "TestPassword123" }
+
+### 
 # @name login
 POST {{ChatPlatform.Server_HostAddress}}/api/auth/login
 Content-Type: application/json
 
-{
-  "login": "testuser",
-  "password": "TestPassword123"
-}
+{ "login": "testuser", "password": "TestPassword123" }
 
-###
+### 
+# @name loginOutsider
+POST {{ChatPlatform.Server_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{ "login": "testuser3", "password": "TestPassword123" }
+
+### 
+# @name createGroup
 POST {{ChatPlatform.Server_HostAddress}}/api/groups
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 
-{
-  "name": "My first group"
-}
+{ "name": "Members test group" }
 
-###
-POST {{ChatPlatform.Server_HostAddress}}/api/groups
-Content-Type: application/json
-
-{
-  "name": "My first group"
-}
-
-###
-POST {{ChatPlatform.Server_HostAddress}}/api/groups
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.token}}
 
-{
-  "name": ""
-}
+{ "login": "testuser2" }
+
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{ "login": "testuser2" }
+
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{ "login": "nobody_like_this" }
+
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
+Content-Type: application/json
+
+{ "login": "testuser2" }
+
+### 
+POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
+Content-Type: application/json
+Authorization: Bearer {{loginOutsider.response.body.$.token}}
+
+{ "login": "testuser2" }
