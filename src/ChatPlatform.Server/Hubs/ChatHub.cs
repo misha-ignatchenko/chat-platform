@@ -23,8 +23,9 @@ namespace ChatPlatform.Server.Hubs
         public async Task SendMessage(Guid groupId, string text)
         {
             var userIdNullable = GetUserId();
+            var userLogin = Context.User?.FindFirst(ClaimTypes.Name)?.Value;
 
-            if (userIdNullable is not Guid userId)
+            if (userIdNullable is not Guid userId || userLogin == null)
             {
                 return;
             }
@@ -39,7 +40,8 @@ namespace ChatPlatform.Server.Hubs
 
             await _context.SaveChangesAsync();
 
-            var chatMessage = new ChatMessage(message.Id, message.SenderId, message.GroupId, message.Text, message.SentAt);
+            
+            var chatMessage = new ChatMessage(message.Id, message.SenderId, userLogin, message.GroupId, message.Text, message.SentAt);
             await Clients.Group(groupId.ToString()).SendAsync("ReceiveMessage", chatMessage);
         }
 
