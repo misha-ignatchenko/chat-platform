@@ -12,6 +12,11 @@ namespace ChatPlatform.Server.Hubs
     public class ChatHub : Hub
     {
         private readonly ChatPlatformDbContext _context;
+        public ChatHub(ChatPlatformDbContext context)
+        {
+            _context = context;
+        }
+
         public override async Task OnConnectedAsync()
         {
             var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
