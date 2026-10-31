@@ -73,6 +73,36 @@ namespace ChatPlatform.Server.Controllers
             return Ok();
         }
 
+        [HttpGet("{groupId:guid}/messages")]
+        public async Task<IActionResult> GetMessages(Guid groupId, int limit = 50, DateTimeOffset? before = null)
+        {
+            limit = Math.Clamp(limit, 1, 100);
+
+            var userIdNullable = GetUserId();
+
+            if (userIdNullable is not Guid userId)
+            {
+                return Unauthorized();
+            }
+
+            var isMember = await _context.GroupMembers.AnyAsync(gm => gm.UserId == userId && gm.GroupId == groupId);
+            if (!isMember)
+                return Forbid();
+
+            var query = _context.Messages.Where(m => m.GroupId == groupId);
+
+            if (before is not null)
+                query = query.Where(m => m.SentAt < before);
+
+            query = query.OrderByDescending(m => m.SentAt).Take(limit);
+
+            List<ChatMessage> messages = await query
+                .Select(m => new ChatMessage(m.Id, m.SenderId, m.Sender!.Login, m.GroupId, m.Text, m.SentAt)).ToListAsync();
+
+            messages.Reverse();
+            return Ok(messages);
+        }
+
         private Guid? GetUserId()
         {
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
