@@ -1,75 +1,82 @@
-@ChatPlatform.Server_HostAddress = https://localhost:7004
+@host = https://localhost:7004
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
+
+###  
+POST {{host}}/api/auth/register
 Content-Type: application/json
 
 { "login": "testuser", "password": "TestPassword123" }
 
-### 
-POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
+###
+POST {{host}}/api/auth/register
 Content-Type: application/json
 
 { "login": "testuser2", "password": "TestPassword123" }
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/auth/register
+POST {{host}}/api/auth/register
 Content-Type: application/json
 
 { "login": "testuser3", "password": "TestPassword123" }
 
 ### 
-# @name login
-POST {{ChatPlatform.Server_HostAddress}}/api/auth/login
+# @name glOwner
+POST {{host}}/api/auth/login
 Content-Type: application/json
 
 { "login": "testuser", "password": "TestPassword123" }
 
-### 
-# @name loginOutsider
-POST {{ChatPlatform.Server_HostAddress}}/api/auth/login
+###
+# @name glMember
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "login": "testuser2", "password": "TestPassword123" }
+
+###
+# @name glOutsider
+POST {{host}}/api/auth/login
 Content-Type: application/json
 
 { "login": "testuser3", "password": "TestPassword123" }
 
-### 
-# @name createGroup
-POST {{ChatPlatform.Server_HostAddress}}/api/groups
+###
+# @name glGroupZeta
+POST {{host}}/api/groups
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.token}}
+Authorization: Bearer {{glOwner.response.body.$.token}}
 
-{ "name": "Members test group" }
+{ "name": "Zeta test" }
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
+# @name glGroupAlpha
+POST {{host}}/api/groups
 Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.token}}
+Authorization: Bearer {{glOwner.response.body.$.token}}
+
+{ "name": "Alpha test" }
+
+### 
+POST {{host}}/api/groups/{{glGroupAlpha.response.body.$.id}}/members
+Content-Type: application/json
+Authorization: Bearer {{glOwner.response.body.$.token}}
 
 { "login": "testuser2" }
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
-Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.token}}
-
-{ "login": "testuser2" }
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
-Content-Type: application/json
-Authorization: Bearer {{login.response.body.$.token}}
-
-{ "login": "nobody_like_this" }
+GET {{host}}/api/groups
+Authorization: Bearer {{glOwner.response.body.$.token}}
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
-Content-Type: application/json
-
-{ "login": "testuser2" }
+GET {{host}}/api/groups
+Authorization: Bearer {{glMember.response.body.$.token}}
 
 ### 
-POST {{ChatPlatform.Server_HostAddress}}/api/groups/{{createGroup.response.body.$.id}}/members
-Content-Type: application/json
-Authorization: Bearer {{loginOutsider.response.body.$.token}}
+GET {{host}}/api/groups
+Authorization: Bearer {{glOutsider.response.body.$.token}}
 
-{ "login": "testuser2" }
+### 
+GET {{host}}/api/groups
