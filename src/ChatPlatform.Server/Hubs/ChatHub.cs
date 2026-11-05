@@ -27,6 +27,12 @@ namespace ChatPlatform.Server.Hubs
 
         public async Task SendMessage(Guid groupId, string text)
         {
+            if(string.IsNullOrWhiteSpace(text))
+                throw new HubException("Message cannot be empty");
+
+            if(text.Length > MessageLimits.MaxTextLength)
+                throw new HubException($"Message is too long (max {MessageLimits.MaxTextLength} characters)");
+
             var userIdNullable = GetUserId();
             var userLogin = Context.User?.FindFirst(ClaimTypes.Name)?.Value;
 
