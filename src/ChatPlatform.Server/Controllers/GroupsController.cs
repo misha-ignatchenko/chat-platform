@@ -103,6 +103,26 @@ namespace ChatPlatform.Server.Controllers
             return Ok(messages);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetMyGroups()
+        {
+            var userIdNullable = GetUserId();
+
+            if (userIdNullable is not Guid userId)
+            {
+                return Unauthorized();
+            }
+
+            var groups = await (
+                from gm in _context.GroupMembers
+                join g in _context.Groups on gm.GroupId equals g.Id
+                where gm.UserId == userId
+                orderby g.Name
+                select new GroupInfo(g.Id, g.Name, gm.Role)).ToListAsync();
+
+            return Ok(groups);
+        }
+
         private Guid? GetUserId()
         {
             var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
