@@ -40,6 +40,8 @@ namespace ChatPlatform.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Groups");
                 });
 
@@ -58,6 +60,8 @@ namespace ChatPlatform.Server.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("UserId", "GroupId");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("GroupMembers");
                 });
@@ -79,7 +83,8 @@ namespace ChatPlatform.Server.Migrations
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -101,7 +106,8 @@ namespace ChatPlatform.Server.Migrations
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
@@ -109,7 +115,34 @@ namespace ChatPlatform.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Login")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ChatPlatform.Server.Entities.Group", b =>
+                {
+                    b.HasOne("ChatPlatform.Server.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ChatPlatform.Server.Entities.GroupMember", b =>
+                {
+                    b.HasOne("ChatPlatform.Server.Entities.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ChatPlatform.Server.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ChatPlatform.Server.Entities.Message", b =>
