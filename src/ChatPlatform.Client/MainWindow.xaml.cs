@@ -1,23 +1,16 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using ChatPlatform.Client.Services;
 
-namespace ChatPlatform.Client;
-
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+namespace ChatPlatform.Client
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        private readonly ApiClient _api;
+
+        public MainWindow(ApiClient api)
+        {
+            InitializeComponent();
+            _api = api;
+        }
     }
 }
